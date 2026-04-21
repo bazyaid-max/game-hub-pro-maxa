@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Azkar App</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Arial';
+    background: linear-gradient(135deg, #0f2027, #2c5364);
+    color: white;
+    text-align: center;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.card {
+    background: rgba(255,255,255,0.1);
+    margin: 15px;
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+button {
+    background: #00c9a7;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.progress {
+    margin-top: 10px;
+    height: 10px;
+    background: #444;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #00ffcc;
+    width: 0%;
+    border-radius: 10px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>📿 أذكار اليوم</h1>
+
+<div class="container">
+
+    <button onclick="loadMorning()">🌅 الصباح</button>
+    <button onclick="loadEvening()">🌙 المساء</button>
+
+    <div id="progressText"></div>
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+
+    <div id="list"></div>
+
+</div>
+
+<script>
+let doneList = [];
+
+const morning = [
+"أصبحنا وأصبح الملك لله",
+"اللهم بك أصبحنا",
+"رضيت بالله رباً"
+];
+
+const evening = [
+"أمسينا وأمسى الملك لله",
+"اللهم بك أمسينا",
+"اللهم إني أسألك العفو"
+];
+
+function render(list) {
+    let html = "";
+    list.forEach((z, i) => {
+        let done = doneList.includes(z);
+        html += `
+        <div class="card">
+            <p>${z}</p>
+            <button onclick="markDone('${z}')">
+                ${done ? "✔️ تم" : "قرأت"}
+            </button>
+        </div>`;
+    });
+    document.getElementById("list").innerHTML = html;
+    updateProgress(list);
+}
+
+function markDone(z) {
+    if (!doneList.includes(z)) doneList.push(z);
+    render(currentList);
+}
+
+let currentList = [];
+
+function loadMorning() {
+    currentList = morning;
+    doneList = [];
+    render(morning);
+}
+
+function loadEvening() {
+    currentList = evening;
+    doneList = [];
+    render(evening);
+}
+
+function updateProgress(list) {
+    let percent = (doneList.length / list.length) * 100;
+    document.getElementById("bar").style.width = percent + "%";
+    document.getElementById("progressText").innerText =
+        "التقدم: " + Math.floor(percent) + "%";
+}
+</script>
+
+</body>
+</html>
